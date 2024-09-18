@@ -1,0 +1,124 @@
+﻿@model IEnumerable<MemberModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Member</h1>
+
+    <form asp-action="Index" method="get">
+        <input type="text" name="keyword" placeholder="搜尋會員..."/>
+        <button type="submit">搜尋</button>
+    </form>
+
+    <div>
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th>
+                    <p>功能</p>
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Member", "Home", new MemberModel{Pk = item.Pk, Id = item.Id, Name = item.Name, Gender = item.Gender, Enable = item.Enable, Type = "Edit"})">編輯</a>
+                        <a href="@Url.Action("Delete", "Home", new MemberModel{Pk = item.Pk})" onclick="confirmDelete(event)">刪除</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div id="customModal" class="custom-modal">
+    <div class="custom-modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <p id="modalDelMessage"></p>
+    </div>
+</div>
+
+<style>
+    .custom-modal {
+        display: none; /* 初始隐藏 */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    }
+
+    .custom-modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px; /* 最大宽度 */
+        text-align: center;
+    }
+
+    .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
+@section Scripts{
+    <script>
+        @if (TempData["DelMessage"] != null)
+        {
+            <text>
+                document.getElementById('modalDelMessage').innerText = '@TempData["DelMessage"]';
+                document.getElementById('customModal').style.display = 'block';
+            </text>
+        }
+         // 关闭弹出窗口的函数
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        // 点击窗口外部关闭弹出窗口
+        window.onclick = function(event) {
+            var modal = document.getElementById('customModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+    <script>
+        function confirmDelete(event) {
+            var result = confirm("確認刪除此會員?");
+
+            if (!result) {
+                event.preventDefault();
+            }
+        }
+    </script>
+}
+

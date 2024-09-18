@@ -1,0 +1,132 @@
+﻿@model MemberModel
+@{
+    ViewData["Title"] = "新增會員";
+}
+
+@if (Model.Type == "Edit")
+{
+    <h2>會員修改</h2>
+    <form method="post" action="@Url.Action("Edit")">
+        <input type="hidden" name="Pk" value="@Model.Pk" />
+        <div>
+            <label for="Name">@Html.DisplayNameFor(model => model.Name)</label>
+            <input asp-for="Name" id="Name" />
+        </div>
+        <div>
+            <label for="Id">@Html.DisplayNameFor(model => model.Id)</label>
+            <input asp-for="Id" id="Id" />
+        </div>       
+        <div>
+            <label for="Gander">@Html.DisplayNameFor(model => model.Gender)</label>
+            <select asp-for="Gender" id="Gender">
+                <option value="F">女</option>
+                <option value="M">男</option>
+            </select>
+        </div>
+        <div>
+            <label for="Enable">@Html.DisplayNameFor(model => model.Enable)</label>
+            <select asp-for="Enable" id="Enable">
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit" value="儲存" class="btn btn-success" />
+            <input type="button" value="取消" class="btn btn-danger" onclick="location.href='@Url.Action("Index", "Home")'" ></input>
+        </div>
+    </form>
+}
+else
+{
+    <h2>會員新增</h2>
+    <form method="post" action="@Url.Action("Add")">
+        <div>
+            <label for="Name">@Html.DisplayNameFor(model => model.Name)</label>
+            <input asp-for="Name" id="Name" />
+        </div>
+        <div>
+            <label for="Id">@Html.DisplayNameFor(model => model.Id)</label>
+            <input asp-for="Id" id="Id" />
+        </div>    
+        <div>
+            <label for="Gander">@Html.DisplayNameFor(model => model.Gender)</label>
+            <select asp-for="Gender" id="Gender">
+                <option value="F">女</option>
+                <option value="M">男</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit" value="新增" class="btn btn-success" />
+            <input type="button" value="取消" class="btn btn-danger" onclick="location.href='@Url.Action("Index", "Home")'"></input>
+        </div>
+    </form>
+}
+
+<div id="customModal" class="custom-modal">
+    <div class="custom-modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <p id="modalMessage"></p>
+    </div>
+</div>
+
+<style>
+    .custom-modal {
+        display: none; /* 初始隐藏 */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    }
+
+    .custom-modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px; /* 最大宽度 */
+        text-align: center;
+    }
+
+    .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+</style>
+
+@section Scripts{
+    <script>
+        @if (TempData["Message"] != null)
+        {
+            <text>
+                document.getElementById('modalMessage').innerText = '@TempData["Message"]';
+                document.getElementById('customModal').style.display = 'block';
+            </text>
+        }
+         // 关闭弹出窗口的函数
+        function closeModal() {
+            document.getElementById('customModal').style.display = 'none';
+        }
+
+        // 点击窗口外部关闭弹出窗口
+        window.onclick = function(event) {
+            var modal = document.getElementById('customModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+}
